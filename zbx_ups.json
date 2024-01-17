@@ -1,0 +1,855 @@
+{
+    "zabbix_export": {
+        "version": "6.4",
+        "template_groups": [
+            {
+                "uuid": "7df96b18c230490a9a0a9e2307226338",
+                "name": "Templates"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "7c56d2b86cd543f4b893fc7db4e35d4f",
+                "template": "APC simple template",
+                "name": "APC simple template",
+                "description": "This a a alternative universal UPS template because the original templates comes with bugs. Tested on Zabbix 6.4.0",
+                "groups": [
+                    {
+                        "name": "Templates"
+                    }
+                ],
+                "items": [
+                    {
+                        "uuid": "dc03c6321bc743f2ac6dea6e8171a6f8",
+                        "name": "Battery capacity",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.2.1.0",
+                        "key": "battery.capacity[BatteryCapacity]",
+                        "delay": "5m",
+                        "units": "%",
+                        "description": "MIB: PowerNet-MIB\nThe remaining battery capacity expressed as\n percentage of full capacity."
+                    },
+                    {
+                        "uuid": "06d725772c624b9cbd4cdf87f10c5dc2",
+                        "name": "Battery last replace date",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.1.3.0",
+                        "key": "battery.last_replace_date[upsBasicBatteryLastReplaceDate]",
+                        "delay": "1d",
+                        "trends": "0",
+                        "value_type": "CHAR",
+                        "description": "MIB: PowerNet-MIB\nThe date when the UPS system's batteries were last replaced\n in mm/dd/yy (or yyyy) format. For Smart-UPS models, this value\n is originally set at the factory. When the UPS batteries\n are replaced, this value should be reset by the administrator.\n For Symmetra PX 250/500 this OID is read-only and is configurable in the local display only."
+                    },
+                    {
+                        "uuid": "c85ef5a894034e5ba81167e1171b8cba",
+                        "name": "Battery replace",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.2.4.0",
+                        "key": "battery.replace[upsAdvBatteryReplace]",
+                        "description": "If result = 2 then battery needs replacing (1 = ok)",
+                        "valuemap": {
+                            "name": "Battery needs to be replaced"
+                        }
+                    },
+                    {
+                        "uuid": "56c7f683622a4b9b8848b3705d18b306",
+                        "name": "Battery Time Remaining",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.2.3.0",
+                        "key": "battery.status[upsAdvBatteryRunTimeRemaining]",
+                        "value_type": "FLOAT",
+                        "units": "minutes",
+                        "description": "The UPS battery run time remaining before battery exhaustion.",
+                        "preprocessing": [
+                            {
+                                "type": "MULTIPLIER",
+                                "parameters": [
+                                    "0.000166666667"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "98bfd87bfa744e908c0fe3f99fb4c1eb",
+                        "name": "Battery status",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.1.1.0",
+                        "key": "battery.status[upsBasicBatteryStatus]",
+                        "description": "The status of the UPS batteries. A batteryLow(3) value indicates the UPS will be unable to sustain the current load, and its services will be lost if power is not restored. The amount of run time in reserve at the time of low battery can be configured by the upsAdvConfigLowBatteryRunTime. Enumeration: 'unknown': 1, 'batteryNormal': 2, 'batteryLow': 3.\n installed has an internal error condition.",
+                        "valuemap": {
+                            "name": "Battery status"
+                        }
+                    },
+                    {
+                        "uuid": "710767bacb2c4b7eb607e4ef1b9435b3",
+                        "name": "Battery temperature",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.2.2.0",
+                        "key": "battery.temperature[upsHighPrecBatteryTemperature]",
+                        "value_type": "FLOAT",
+                        "units": "\u2103",
+                        "triggers": [
+                            {
+                                "uuid": "7d8462bbcd9148088312c2e6917812a2",
+                                "expression": "last(/APC simple template/battery.temperature[upsHighPrecBatteryTemperature])>30",
+                                "name": "Battery temperature above 30",
+                                "priority": "DISASTER"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "e249507e5af74faf8f7c25e1992a20ef",
+                        "name": "Battery voltage",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.2.8.0",
+                        "key": "battery.voltage[upsHighPrecBatteryActualVoltage]",
+                        "value_type": "FLOAT",
+                        "units": "V",
+                        "description": "MIB: PowerNet-MIB\nThe actual battery bus voltage in Volts."
+                    },
+                    {
+                        "uuid": "7631c2c8ba35443e9460a832ce101f3d",
+                        "name": "External temperature sensor",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.25.1.2.1.6.1.1",
+                        "key": "external.sensor.temperature[uioSensorStatusTemperatureDegC.1.1.1]",
+                        "units": "\u2103",
+                        "description": "MIB: PowerNet-MIB\nThe sensor's current temperature reading in Celsius.\n -1 indicates an invalid reading due to lost communications.",
+                        "triggers": [
+                            {
+                                "uuid": "c59b31f6d24e49da97a054cefe7b6f8a",
+                                "expression": "last(/APC simple template/external.sensor.temperature[uioSensorStatusTemperatureDegC.1.1.1])>26",
+                                "name": "Send external sensor temperature warning",
+                                "event_name": "Send external sensor temperature warning",
+                                "priority": "DISASTER",
+                                "description": "External sensor temperature alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "7e8d848fd4d4414ab9a82e070b33ebdb",
+                        "name": "Input frequency",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.3.2.4.0",
+                        "key": "input.frequency[upsHighPrecInputFrequency]",
+                        "value_type": "FLOAT",
+                        "units": "Hz",
+                        "description": "MIB: PowerNet-MIB\nThe current input frequency to the UPS system in Hz."
+                    },
+                    {
+                        "uuid": "73c59d1522fd49d7b65ca057e4c9184b",
+                        "name": "Last self test",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.7.2.4.0",
+                        "key": "last.selftest[upsLastSelfTest]",
+                        "delay": "1d",
+                        "trends": "0",
+                        "value_type": "TEXT"
+                    },
+                    {
+                        "uuid": "72126f2f599f42fe9870117d2f8dde48",
+                        "name": "Output current",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.4.3.4.0",
+                        "key": "output.current[upsHighPrecOutputCurrent]",
+                        "units": "A",
+                        "description": "MIB: PowerNet-MIB\nThe current in amperes drawn by the load on the UPS."
+                    },
+                    {
+                        "uuid": "48a3e87402944df0bbed110e37b94226",
+                        "name": "Output frequency",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.4.2.2.0",
+                        "key": "output.frequency[upsHighPrecOutputFrequency]",
+                        "value_type": "FLOAT",
+                        "units": "Hz",
+                        "description": "MIB: PowerNet-MIB\nThe current ouput frequency to the UPS system in Hz."
+                    },
+                    {
+                        "uuid": "094496a88d594c87a492b832786c1610",
+                        "name": "Output load",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.4.2.3.0",
+                        "key": "output.load[upsHighPrecOutputLoad]",
+                        "units": "%",
+                        "description": "MIB: PowerNet-MIB\nThe current UPS load expressed as percentage\nof rated capacity."
+                    },
+                    {
+                        "uuid": "d6e35cb891244c02ba52e0728a52c883",
+                        "name": "Output voltage",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.4.2.1.0",
+                        "key": "output.voltage[upsHighPrecOutputVoltage]",
+                        "units": "V",
+                        "description": "MIB: PowerNet-MIB\nThe output voltage of the UPS system in VAC."
+                    },
+                    {
+                        "uuid": "fe1bc1ad903e49d88b70e5f20e5e64af",
+                        "name": "Self test result",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.7.2.3.0",
+                        "key": "selftest.status[upsBasicSelfTestStatus]",
+                        "delay": "1d",
+                        "valuemap": {
+                            "name": "Self test result"
+                        }
+                    },
+                    {
+                        "uuid": "07e1cb6bc44d4100b2a7f08d7b006a88",
+                        "name": "Line input fail cause",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.3.2.5.0",
+                        "key": "ups.AdvInput[upsAdvInputLineFailCause]",
+                        "description": "This itwem reports a strange undefined output. Still working on this\n\nThe reason for the occurrence of the last transfer to UPS battery power. The variable is set to: - noTransfer(1) -- if there is no transfer yet. - highLineVoltage(2) -- if the transfer to battery is caused by an over voltage greater than the high transfer voltage. - brownout(3) -- if the duration of the outage is greater than five seconds and the line voltage is between 40% of the rated output voltage and the low transfer voltage. - blackout(4) -- if the duration of the outage is greater than five seconds and the line voltage is between 40% of the rated output voltage and ground. - smallMomentarySag(5) -- if the duration of the outage is less than five seconds and the line voltage is between 40% of the rated output voltage and the low transfer voltage. - deepMomentarySag(6) -- if the duration of the outage is less than five seconds and the line voltage is between 40% of the rated output voltage and ground. The variable is set to - smallMomentarySpike(7) -- if the line failure is caused by a rate of change of input voltage less than ten volts per cycle. - largeMomentarySpike(8) -- if the line failure is caused by a rate of change of input voltage greater than ten volts per cycle. - selfTest(9) -- if the UPS was commanded to do a self test. - rateOfVoltageChange(10) -- if the failure is due to the rate of change of the line voltage. Enumeration: 'highLineVoltage': 2, 'selfTest': 9, 'largeMomentarySpike': 8, 'rateOfVoltageChange': 10, 'brownout': 3, 'noTransfer': 1, 'deepMomentarySag': 6, 'smallMomentarySag': 5, 'smallMomentarySpike': 7, 'blackout': 4."
+                    },
+                    {
+                        "uuid": "3713a345fab746bbba03465989795832",
+                        "name": "Input Voltage",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.3.2.1.0",
+                        "key": "ups.input[upsAdvInputLineVoltage]",
+                        "units": "V",
+                        "description": "The current utility line voltage in VAC."
+                    },
+                    {
+                        "uuid": "b05585986f4541a98e0da91de129a734",
+                        "name": "Input Voltage Max",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.3.2.1.0",
+                        "key": "ups.input[upsAdvInputMaxLineVoltage]",
+                        "units": "V",
+                        "description": "The maximum utility line voltage in VAC over the previous 1 minute period"
+                    },
+                    {
+                        "uuid": "335dd1e1daa0411fb55e753f240d431b",
+                        "name": "Input Voltage Min",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.3.2.3.0",
+                        "key": "ups.input[upsAdvInputMinLineVoltage]",
+                        "units": "V",
+                        "description": "The minimum utility line voltage in VAC over the previous 1 minute period."
+                    },
+                    {
+                        "uuid": "843416542b5d4d678f28dd082a8bfb4f",
+                        "name": "Time on battery",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": "1.3.6.1.4.1.318.1.1.1.2.1.2.0",
+                        "key": "upsBattery[upsBasicBatteryTimeOnBattery]",
+                        "value_type": "FLOAT",
+                        "units": "minutes",
+                        "description": "The elapsed time since the UPS has switched to battery power.",
+                        "preprocessing": [
+                            {
+                                "type": "MULTIPLIER",
+                                "parameters": [
+                                    "0.000166666667"
+                                ]
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "26fb45ed1dcf408ea3c16f140b8341f7",
+                                "expression": "last(/APC simple template/upsBattery[upsBasicBatteryTimeOnBattery])>1",
+                                "name": "UPS running on battery",
+                                "priority": "DISASTER"
+                            }
+                        ]
+                    }
+                ],
+                "dashboards": [
+                    {
+                        "uuid": "1ac85bbade7e4be28d2a8f7aab9fe069",
+                        "name": "UPS actual state",
+                        "pages": [
+                            {
+                                "widgets": [
+                                    {
+                                        "type": "item",
+                                        "name": "Input Voltage",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "ups.input[upsAdvInputLineVoltage]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Output load",
+                                        "y": "4",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "output.load[upsHighPrecOutputLoad]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Battery voltage",
+                                        "y": "8",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "battery.voltage[upsHighPrecBatteryActualVoltage]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Max battery time",
+                                        "y": "12",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "battery.status[upsAdvBatteryRunTimeRemaining]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "type": "STRING",
+                                                "name": "units",
+                                                "value": "min"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Input frequency",
+                                        "x": "4",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "input.frequency[upsHighPrecInputFrequency]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Output current",
+                                        "x": "4",
+                                        "y": "4",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "output.current[upsHighPrecOutputCurrent]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Battery capacity",
+                                        "x": "4",
+                                        "y": "8",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "battery.capacity[BatteryCapacity]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "time running on battery",
+                                        "x": "4",
+                                        "y": "12",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "upsBattery[upsBasicBatteryTimeOnBattery]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "type": "STRING",
+                                                "name": "thresholds.color.0",
+                                                "value": "FF465C"
+                                            },
+                                            {
+                                                "type": "STRING",
+                                                "name": "thresholds.threshold.0",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "STRING",
+                                                "name": "units",
+                                                "value": "min"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "plaintext",
+                                        "name": "Last selftest",
+                                        "x": "8",
+                                        "width": "7",
+                                        "fields": [
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemids",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "last.selftest[upsLastSelfTest]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_as_html",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_lines",
+                                                "value": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "plaintext",
+                                        "name": "selftest Result",
+                                        "x": "8",
+                                        "y": "2",
+                                        "width": "7",
+                                        "fields": [
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemids",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "selftest.status[upsBasicSelfTestStatus]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_lines",
+                                                "value": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Output Voltage",
+                                        "x": "8",
+                                        "y": "4",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "output.voltage[upsHighPrecOutputVoltage]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Battery Temperature",
+                                        "x": "8",
+                                        "y": "8",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "battery.temperature[upsHighPrecBatteryTemperature]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "plaintext",
+                                        "name": "Last battery replaced",
+                                        "x": "8",
+                                        "y": "12",
+                                        "width": "7",
+                                        "fields": [
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemids",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "battery.last_replace_date[upsBasicBatteryLastReplaceDate]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_as_html",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_lines",
+                                                "value": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "plaintext",
+                                        "name": "Need to replace",
+                                        "x": "8",
+                                        "y": "14",
+                                        "width": "7",
+                                        "fields": [
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemids",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "battery.replace[upsAdvBatteryReplace]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_as_html",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show_lines",
+                                                "value": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "item",
+                                        "name": "Output frequency",
+                                        "x": "12",
+                                        "y": "4",
+                                        "width": "4",
+                                        "height": "4",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "adv_conf",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "decimal_places",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "type": "ITEM",
+                                                "name": "itemid",
+                                                "value": {
+                                                    "host": "APC simple template",
+                                                    "key": "output.frequency[upsHighPrecOutputFrequency]"
+                                                }
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "show",
+                                                "value": "2"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "valuemaps": [
+                    {
+                        "uuid": "d83f9792ead248b185b5045ee71ef7c7",
+                        "name": "Battery needs to be replaced",
+                        "mappings": [
+                            {
+                                "value": "1",
+                                "newvalue": "no Battery Needs Replacing"
+                            },
+                            {
+                                "value": "2",
+                                "newvalue": "Battery Needs Replacing"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "8116be6a267a47c69ed50a5b844ac3df",
+                        "name": "Battery status",
+                        "mappings": [
+                            {
+                                "value": "3",
+                                "newvalue": "batteryLow"
+                            },
+                            {
+                                "value": "2",
+                                "newvalue": "batteryNormal"
+                            },
+                            {
+                                "value": "1",
+                                "newvalue": "unknown"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4a6c095db08142048e4a0a06f20c8916",
+                        "name": "last transfer to battery power",
+                        "mappings": [
+                            {
+                                "value": "1",
+                                "newvalue": "No events"
+                            },
+                            {
+                                "value": "2",
+                                "newvalue": "High line voltage"
+                            },
+                            {
+                                "value": "3",
+                                "newvalue": "Brownout"
+                            },
+                            {
+                                "value": "4",
+                                "newvalue": "Loss of mains power"
+                            },
+                            {
+                                "value": "5",
+                                "newvalue": "Small temporary power drop"
+                            },
+                            {
+                                "value": "6",
+                                "newvalue": "Large temporary power drop"
+                            },
+                            {
+                                "value": "7",
+                                "newvalue": "Small spike"
+                            },
+                            {
+                                "value": "8",
+                                "newvalue": "Large spike"
+                            },
+                            {
+                                "value": "9",
+                                "newvalue": "UPS self test"
+                            },
+                            {
+                                "value": "10",
+                                "newvalue": "Excessive input voltage fluctuation"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "8547dba36044439d8eb66e911e84e9a8",
+                        "name": "Self test result",
+                        "mappings": [
+                            {
+                                "value": "4",
+                                "newvalue": "Test In Progress"
+                            },
+                            {
+                                "value": "2",
+                                "newvalue": "Failed"
+                            },
+                            {
+                                "value": "1",
+                                "newvalue": "ok"
+                            },
+                            {
+                                "value": "3",
+                                "newvalue": "Invalid Test"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

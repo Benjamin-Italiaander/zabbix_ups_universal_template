@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.4</version>
+    <template_groups>
+        <template_group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates</name>
+        </template_group>
+    </template_groups>
+    <templates>
+        <template>
+            <uuid>7c56d2b86cd543f4b893fc7db4e35d4f</uuid>
+            <template>APC simple template</template>
+            <name>APC simple template</name>
+            <description>This a a alternative universal UPS template because the original templates comes with bugs. Tested on Zabbix 6.4.0</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>dc03c6321bc743f2ac6dea6e8171a6f8</uuid>
+                    <name>Battery capacity</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.2.1.0</snmp_oid>
+                    <key>battery.capacity[BatteryCapacity]</key>
+                    <delay>5m</delay>
+                    <units>%</units>
+                    <description>MIB: PowerNet-MIB
+The remaining battery capacity expressed as
+ percentage of full capacity.</description>
+                </item>
+                <item>
+                    <uuid>06d725772c624b9cbd4cdf87f10c5dc2</uuid>
+                    <name>Battery last replace date</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.1.3.0</snmp_oid>
+                    <key>battery.last_replace_date[upsBasicBatteryLastReplaceDate]</key>
+                    <delay>1d</delay>
+                    <trends>0</trends>
+                    <value_type>CHAR</value_type>
+                    <description>MIB: PowerNet-MIB
+The date when the UPS system's batteries were last replaced
+ in mm/dd/yy (or yyyy) format. For Smart-UPS models, this value
+ is originally set at the factory. When the UPS batteries
+ are replaced, this value should be reset by the administrator.
+ For Symmetra PX 250/500 this OID is read-only and is configurable in the local display only.</description>
+                </item>
+                <item>
+                    <uuid>c85ef5a894034e5ba81167e1171b8cba</uuid>
+                    <name>Battery replace</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.2.4.0</snmp_oid>
+                    <key>battery.replace[upsAdvBatteryReplace]</key>
+                    <description>If result = 2 then battery needs replacing (1 = ok)</description>
+                    <valuemap>
+                        <name>Battery needs to be replaced</name>
+                    </valuemap>
+                </item>
+                <item>
+                    <uuid>56c7f683622a4b9b8848b3705d18b306</uuid>
+                    <name>Battery Time Remaining</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.2.3.0</snmp_oid>
+                    <key>battery.status[upsAdvBatteryRunTimeRemaining]</key>
+                    <value_type>FLOAT</value_type>
+                    <units>minutes</units>
+                    <description>The UPS battery run time remaining before battery exhaustion.</description>
+                    <preprocessing>
+                        <step>
+                            <type>MULTIPLIER</type>
+                            <parameters>
+                                <parameter>0.000166666667</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                </item>
+                <item>
+                    <uuid>98bfd87bfa744e908c0fe3f99fb4c1eb</uuid>
+                    <name>Battery status</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.1.1.0</snmp_oid>
+                    <key>battery.status[upsBasicBatteryStatus]</key>
+                    <description>The status of the UPS batteries. A batteryLow(3) value indicates the UPS will be unable to sustain the current load, and its services will be lost if power is not restored. The amount of run time in reserve at the time of low battery can be configured by the upsAdvConfigLowBatteryRunTime. Enumeration: 'unknown': 1, 'batteryNormal': 2, 'batteryLow': 3.
+ installed has an internal error condition.</description>
+                    <valuemap>
+                        <name>Battery status</name>
+                    </valuemap>
+                </item>
+                <item>
+                    <uuid>710767bacb2c4b7eb607e4ef1b9435b3</uuid>
+                    <name>Battery temperature</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.2.2.0</snmp_oid>
+                    <key>battery.temperature[upsHighPrecBatteryTemperature]</key>
+                    <value_type>FLOAT</value_type>
+                    <units>℃</units>
+                    <triggers>
+                        <trigger>
+                            <uuid>7d8462bbcd9148088312c2e6917812a2</uuid>
+                            <expression>last(/APC simple template/battery.temperature[upsHighPrecBatteryTemperature])&gt;30</expression>
+                            <name>Battery temperature above 30</name>
+                            <priority>DISASTER</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>e249507e5af74faf8f7c25e1992a20ef</uuid>
+                    <name>Battery voltage</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.2.8.0</snmp_oid>
+                    <key>battery.voltage[upsHighPrecBatteryActualVoltage]</key>
+                    <value_type>FLOAT</value_type>
+                    <units>V</units>
+                    <description>MIB: PowerNet-MIB
+The actual battery bus voltage in Volts.</description>
+                </item>
+                <item>
+                    <uuid>7631c2c8ba35443e9460a832ce101f3d</uuid>
+                    <name>External temperature sensor</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.25.1.2.1.6.1.1</snmp_oid>
+                    <key>external.sensor.temperature[uioSensorStatusTemperatureDegC.1.1.1]</key>
+                    <units>℃</units>
+                    <description>MIB: PowerNet-MIB
+The sensor's current temperature reading in Celsius.
+ -1 indicates an invalid reading due to lost communications.</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>c59b31f6d24e49da97a054cefe7b6f8a</uuid>
+                            <expression>last(/APC simple template/external.sensor.temperature[uioSensorStatusTemperatureDegC.1.1.1])&gt;26</expression>
+                            <name>Send external sensor temperature warning</name>
+                            <event_name>Send external sensor temperature warning</event_name>
+                            <priority>DISASTER</priority>
+                            <description>External sensor temperature alarm</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>7e8d848fd4d4414ab9a82e070b33ebdb</uuid>
+                    <name>Input frequency</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.3.2.4.0</snmp_oid>
+                    <key>input.frequency[upsHighPrecInputFrequency]</key>
+                    <value_type>FLOAT</value_type>
+                    <units>Hz</units>
+                    <description>MIB: PowerNet-MIB
+The current input frequency to the UPS system in Hz.</description>
+                </item>
+                <item>
+                    <uuid>73c59d1522fd49d7b65ca057e4c9184b</uuid>
+                    <name>Last self test</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.7.2.4.0</snmp_oid>
+                    <key>last.selftest[upsLastSelfTest]</key>
+                    <delay>1d</delay>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                </item>
+                <item>
+                    <uuid>72126f2f599f42fe9870117d2f8dde48</uuid>
+                    <name>Output current</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.4.3.4.0</snmp_oid>
+                    <key>output.current[upsHighPrecOutputCurrent]</key>
+                    <units>A</units>
+                    <description>MIB: PowerNet-MIB
+The current in amperes drawn by the load on the UPS.</description>
+                </item>
+                <item>
+                    <uuid>48a3e87402944df0bbed110e37b94226</uuid>
+                    <name>Output frequency</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.4.2.2.0</snmp_oid>
+                    <key>output.frequency[upsHighPrecOutputFrequency]</key>
+                    <value_type>FLOAT</value_type>
+                    <units>Hz</units>
+                    <description>MIB: PowerNet-MIB
+The current ouput frequency to the UPS system in Hz.</description>
+                </item>
+                <item>
+                    <uuid>094496a88d594c87a492b832786c1610</uuid>
+                    <name>Output load</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.4.2.3.0</snmp_oid>
+                    <key>output.load[upsHighPrecOutputLoad]</key>
+                    <units>%</units>
+                    <description>MIB: PowerNet-MIB
+The current UPS load expressed as percentage
+of rated capacity.</description>
+                </item>
+                <item>
+                    <uuid>d6e35cb891244c02ba52e0728a52c883</uuid>
+                    <name>Output voltage</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.4.2.1.0</snmp_oid>
+                    <key>output.voltage[upsHighPrecOutputVoltage]</key>
+                    <units>V</units>
+                    <description>MIB: PowerNet-MIB
+The output voltage of the UPS system in VAC.</description>
+                </item>
+                <item>
+                    <uuid>fe1bc1ad903e49d88b70e5f20e5e64af</uuid>
+                    <name>Self test result</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.7.2.3.0</snmp_oid>
+                    <key>selftest.status[upsBasicSelfTestStatus]</key>
+                    <delay>1d</delay>
+                    <valuemap>
+                        <name>Self test result</name>
+                    </valuemap>
+                </item>
+                <item>
+                    <uuid>07e1cb6bc44d4100b2a7f08d7b006a88</uuid>
+                    <name>Line input fail cause</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.3.2.5.0</snmp_oid>
+                    <key>ups.AdvInput[upsAdvInputLineFailCause]</key>
+                    <description>This itwem reports a strange undefined output. Still working on this
+
+The reason for the occurrence of the last transfer to UPS battery power. The variable is set to: - noTransfer(1) -- if there is no transfer yet. - highLineVoltage(2) -- if the transfer to battery is caused by an over voltage greater than the high transfer voltage. - brownout(3) -- if the duration of the outage is greater than five seconds and the line voltage is between 40% of the rated output voltage and the low transfer voltage. - blackout(4) -- if the duration of the outage is greater than five seconds and the line voltage is between 40% of the rated output voltage and ground. - smallMomentarySag(5) -- if the duration of the outage is less than five seconds and the line voltage is between 40% of the rated output voltage and the low transfer voltage. - deepMomentarySag(6) -- if the duration of the outage is less than five seconds and the line voltage is between 40% of the rated output voltage and ground. The variable is set to - smallMomentarySpike(7) -- if the line failure is caused by a rate of change of input voltage less than ten volts per cycle. - largeMomentarySpike(8) -- if the line failure is caused by a rate of change of input voltage greater than ten volts per cycle. - selfTest(9) -- if the UPS was commanded to do a self test. - rateOfVoltageChange(10) -- if the failure is due to the rate of change of the line voltage. Enumeration: 'highLineVoltage': 2, 'selfTest': 9, 'largeMomentarySpike': 8, 'rateOfVoltageChange': 10, 'brownout': 3, 'noTransfer': 1, 'deepMomentarySag': 6, 'smallMomentarySag': 5, 'smallMomentarySpike': 7, 'blackout': 4.</description>
+                </item>
+                <item>
+                    <uuid>3713a345fab746bbba03465989795832</uuid>
+                    <name>Input Voltage</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.3.2.1.0</snmp_oid>
+                    <key>ups.input[upsAdvInputLineVoltage]</key>
+                    <units>V</units>
+                    <description>The current utility line voltage in VAC.</description>
+                </item>
+                <item>
+                    <uuid>b05585986f4541a98e0da91de129a734</uuid>
+                    <name>Input Voltage Max</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.3.2.1.0</snmp_oid>
+                    <key>ups.input[upsAdvInputMaxLineVoltage]</key>
+                    <units>V</units>
+                    <description>The maximum utility line voltage in VAC over the previous 1 minute period</description>
+                </item>
+                <item>
+                    <uuid>335dd1e1daa0411fb55e753f240d431b</uuid>
+                    <name>Input Voltage Min</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.3.2.3.0</snmp_oid>
+                    <key>ups.input[upsAdvInputMinLineVoltage]</key>
+                    <units>V</units>
+                    <description>The minimum utility line voltage in VAC over the previous 1 minute period.</description>
+                </item>
+                <item>
+                    <uuid>843416542b5d4d678f28dd082a8bfb4f</uuid>
+                    <name>Time on battery</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.4.1.318.1.1.1.2.1.2.0</snmp_oid>
+                    <key>upsBattery[upsBasicBatteryTimeOnBattery]</key>
+                    <value_type>FLOAT</value_type>
+                    <units>minutes</units>
+                    <description>The elapsed time since the UPS has switched to battery power.</description>
+                    <preprocessing>
+                        <step>
+                            <type>MULTIPLIER</type>
+                            <parameters>
+                                <parameter>0.000166666667</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <triggers>
+                        <trigger>
+                            <uuid>26fb45ed1dcf408ea3c16f140b8341f7</uuid>
+                            <expression>last(/APC simple template/upsBattery[upsBasicBatteryTimeOnBattery])&gt;1</expression>
+                            <name>UPS running on battery</name>
+                            <priority>DISASTER</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <dashboards>
+                <dashboard>
+                    <uuid>1ac85bbade7e4be28d2a8f7aab9fe069</uuid>
+                    <name>UPS actual state</name>
+                    <pages>
+                        <page>
+                            <widgets>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Input Voltage</name>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>ups.input[upsAdvInputLineVoltage]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Output load</name>
+                                    <y>4</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>output.load[upsHighPrecOutputLoad]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Battery voltage</name>
+                                    <y>8</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>battery.voltage[upsHighPrecBatteryActualVoltage]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Max battery time</name>
+                                    <y>12</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>battery.status[upsAdvBatteryRunTimeRemaining]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                        <field>
+                                            <type>STRING</type>
+                                            <name>units</name>
+                                            <value>min</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Input frequency</name>
+                                    <x>4</x>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>input.frequency[upsHighPrecInputFrequency]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Output current</name>
+                                    <x>4</x>
+                                    <y>4</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>output.current[upsHighPrecOutputCurrent]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Battery capacity</name>
+                                    <x>4</x>
+                                    <y>8</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>battery.capacity[BatteryCapacity]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>time running on battery</name>
+                                    <x>4</x>
+                                    <y>12</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>upsBattery[upsBasicBatteryTimeOnBattery]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                        <field>
+                                            <type>STRING</type>
+                                            <name>thresholds.color.0</name>
+                                            <value>FF465C</value>
+                                        </field>
+                                        <field>
+                                            <type>STRING</type>
+                                            <name>thresholds.threshold.0</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>STRING</type>
+                                            <name>units</name>
+                                            <value>min</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>plaintext</type>
+                                    <name>Last selftest</name>
+                                    <x>8</x>
+                                    <width>7</width>
+                                    <fields>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemids</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>last.selftest[upsLastSelfTest]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_as_html</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_lines</name>
+                                            <value>1</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>plaintext</type>
+                                    <name>selftest Result</name>
+                                    <x>8</x>
+                                    <y>2</y>
+                                    <width>7</width>
+                                    <fields>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemids</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>selftest.status[upsBasicSelfTestStatus]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_lines</name>
+                                            <value>1</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Output Voltage</name>
+                                    <x>8</x>
+                                    <y>4</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>output.voltage[upsHighPrecOutputVoltage]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Battery Temperature</name>
+                                    <x>8</x>
+                                    <y>8</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>battery.temperature[upsHighPrecBatteryTemperature]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>plaintext</type>
+                                    <name>Last battery replaced</name>
+                                    <x>8</x>
+                                    <y>12</y>
+                                    <width>7</width>
+                                    <fields>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemids</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>battery.last_replace_date[upsBasicBatteryLastReplaceDate]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_as_html</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_lines</name>
+                                            <value>1</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>plaintext</type>
+                                    <name>Need to replace</name>
+                                    <x>8</x>
+                                    <y>14</y>
+                                    <width>7</width>
+                                    <fields>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemids</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>battery.replace[upsAdvBatteryReplace]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_as_html</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show_lines</name>
+                                            <value>1</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                                <widget>
+                                    <type>item</type>
+                                    <name>Output frequency</name>
+                                    <x>12</x>
+                                    <y>4</y>
+                                    <width>4</width>
+                                    <height>4</height>
+                                    <fields>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>adv_conf</name>
+                                            <value>1</value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>decimal_places</name>
+                                            <value>0</value>
+                                        </field>
+                                        <field>
+                                            <type>ITEM</type>
+                                            <name>itemid</name>
+                                            <value>
+                                                <host>APC simple template</host>
+                                                <key>output.frequency[upsHighPrecOutputFrequency]</key>
+                                            </value>
+                                        </field>
+                                        <field>
+                                            <type>INTEGER</type>
+                                            <name>show</name>
+                                            <value>2</value>
+                                        </field>
+                                    </fields>
+                                </widget>
+                            </widgets>
+                        </page>
+                    </pages>
+                </dashboard>
+            </dashboards>
+            <valuemaps>
+                <valuemap>
+                    <uuid>d83f9792ead248b185b5045ee71ef7c7</uuid>
+                    <name>Battery needs to be replaced</name>
+                    <mappings>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>no Battery Needs Replacing</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>Battery Needs Replacing</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>8116be6a267a47c69ed50a5b844ac3df</uuid>
+                    <name>Battery status</name>
+                    <mappings>
+                        <mapping>
+                            <value>3</value>
+                            <newvalue>batteryLow</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>batteryNormal</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>unknown</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>4a6c095db08142048e4a0a06f20c8916</uuid>
+                    <name>last transfer to battery power</name>
+                    <mappings>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>No events</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>High line voltage</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>3</value>
+                            <newvalue>Brownout</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>4</value>
+                            <newvalue>Loss of mains power</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>5</value>
+                            <newvalue>Small temporary power drop</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>6</value>
+                            <newvalue>Large temporary power drop</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>7</value>
+                            <newvalue>Small spike</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>8</value>
+                            <newvalue>Large spike</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>9</value>
+                            <newvalue>UPS self test</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>10</value>
+                            <newvalue>Excessive input voltage fluctuation</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>8547dba36044439d8eb66e911e84e9a8</uuid>
+                    <name>Self test result</name>
+                    <mappings>
+                        <mapping>
+                            <value>4</value>
+                            <newvalue>Test In Progress</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>Failed</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>ok</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>3</value>
+                            <newvalue>Invalid Test</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+            </valuemaps>
+        </template>
+    </templates>
+</zabbix_export>
