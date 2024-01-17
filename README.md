@@ -8,6 +8,6 @@ I made different exports even xml
 
 I tested this in the Smart-UPS 2200 RM on zabbix 6.4.0
 
-(https://github.com/Benjamin-Italiaander/zabbix_ups_universal_template/blob/main/screenshot.png)
+![It even has a small dashboard](https://github.com/Benjamin-Italiaander/zabbix_ups_universal_template/blob/main/screenshot.png "Dashboard inside this template)
 
 
