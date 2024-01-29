@@ -57,6 +57,15 @@ The date when the UPS system's batteries were last replaced
                     <valuemap>
                         <name>Battery needs to be replaced</name>
                     </valuemap>
+                    <triggers>
+                        <trigger>
+                            <uuid>a02a1f5c296446849a817e993ff0e259</uuid>
+                            <expression>last(/APC simple template/battery.replace[upsAdvBatteryReplace])=2</expression>
+                            <name>Battery needs replacement</name>
+                            <priority>HIGH</priority>
+                            <description>Battery needs to be replaced</description>
+                        </trigger>
+                    </triggers>
                 </item>
                 <item>
                     <uuid>56c7f683622a4b9b8848b3705d18b306</uuid>
